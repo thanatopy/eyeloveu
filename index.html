@@ -1,1 +1,460 @@
- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for you</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f5f0e8;
+    --warm: #e8ddd0;
+    --ink: #2a1f1a;
+    --blush: #c43f3f;
+    --rose: #8b1a1a;
+    --faded: #8a7a72;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lora', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(196,63,63,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,26,26,0.06) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .card-wrap {
+    perspective: 1200px;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+  }
+
+  .card {
+    width: 260px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow:
+      0 2px 4px rgba(42,31,26,0.06),
+      0 8px 32px rgba(42,31,26,0.10),
+      0 1px 0 rgba(255,255,255,0.8) inset;
+    padding: 44px 36px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    transition: transform 0.4s cubic-bezier(.22,.68,0,1.2), box-shadow 0.4s ease;
+    transform-origin: center bottom;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blush), var(--rose), var(--blush));
+    opacity: 0.7;
+  }
+
+  .card-wrap:hover .card {
+    transform: translateY(-6px) rotate(-0.5deg);
+    box-shadow:
+      0 4px 8px rgba(42,31,26,0.08),
+      0 20px 52px rgba(42,31,26,0.14);
+  }
+
+  .heart-wrap { position: relative; line-height: 1; }
+
+  .svg-heart {
+    width: 42px;
+    height: 38px;
+    display: block;
+    animation: heartbeat 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(139,26,26,0.3));
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.18); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.10); }
+    56%       { transform: scale(1); }
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.55rem;
+    color: var(--ink);
+    font-weight: 300;
+    font-style: italic;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .card-hint {
+    font-size: 0.7rem;
+    color: var(--faded);
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(245,240,232,0.0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+    transition: background 0.5s ease;
+    padding: 20px;
+  }
+
+  .overlay.open {
+    background: rgba(245,240,232,0.96);
+    pointer-events: all;
+    backdrop-filter: blur(6px);
+  }
+
+  .letter {
+    max-width: 540px;
+    width: 100%;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow:
+      0 2px 4px rgba(42,31,26,0.05),
+      0 24px 80px rgba(42,31,26,0.12);
+    padding: 56px 52px 48px;
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+    transition: opacity 0.55s cubic-bezier(.22,.68,0,1), transform 0.55s cubic-bezier(.22,.68,0,1);
+    position: relative;
+    overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .letter::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blush), var(--rose), var(--blush));
+    opacity: 0.7;
+  }
+
+  .overlay.open .letter {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .letter-close {
+    position: absolute;
+    top: 18px; right: 22px;
+    background: none; border: none;
+    font-size: 1.1rem;
+    color: var(--faded);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 2px;
+    transition: color 0.2s;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 0.05em;
+  }
+  .letter-close:hover { color: var(--ink); }
+
+  .letter-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 28px;
+  }
+
+  .letter-body {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .letter-body p { margin-bottom: 1.4em; }
+  .letter-body p:last-of-type { margin-bottom: 0; }
+  .letter-body em { font-style: italic; color: var(--rose); }
+
+  .letter-sign {
+    margin-top: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--faded);
+    text-align: right;
+  }
+
+  .btn-area {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(42,31,26,0.07);
+    text-align: center;
+  }
+
+  .btn-question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--faded);
+    margin-bottom: 22px;
+    display: block;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-yes, .btn-no {
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .btn-yes {
+    background: var(--rose);
+    color: #fff;
+    padding: 12px 28px;
+    font-size: 1rem;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.25s, padding 0.35s cubic-bezier(.34,1.56,.64,1), font-size 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .btn-yes:hover { background: #a52020; }
+
+  .btn-no {
+    background: transparent;
+    color: var(--faded);
+    padding: 12px 22px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(138,122,114,0.3);
+    transition: border-color 0.2s, color 0.2s, transform 0.3s, opacity 0.3s;
+  }
+
+  .btn-no:hover {
+    border-color: rgba(138,122,114,0.6);
+    color: var(--ink);
+  }
+
+  .blackout {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .blackout.on {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .blackout-text {
+    font-family: 'Lora', serif;
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    font-style: italic;
+    transition: color 1.2s ease 0.9s;
+    text-align: center;
+    max-width: 380px;
+    padding: 0 28px;
+    line-height: 1.8;
+  }
+
+  .blackout.on .blackout-text {
+    color: rgba(255,255,255,0.88);
+  }
+
+  .card-names {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid rgba(42,31,26,0.08);
+    padding-top: 14px;
+    margin-top: 2px;
+  }
+
+  .card-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .card-name-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    font-weight: 300;
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .card-name-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-style: italic;
+    font-weight: 300;
+    text-align: right;
+  }
+
+  .letter::-webkit-scrollbar { width: 4px; }
+  .letter::-webkit-scrollbar-track { background: transparent; }
+  .letter::-webkit-scrollbar-thumb { background: rgba(138,122,114,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- CARD -->
+<div class="card-wrap" id="cardWrap" onclick="openLetter()">
+  <div class="card">
+    <div class="heart-wrap">
+      <svg class="svg-heart" viewBox="0 0 42 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 35.5C21 35.5 2 24.5 2 12.5C2 7.25329 6.25329 3 11.5 3C14.7 3 17.55 4.6 19.35 7.05L21 9.25L22.65 7.05C24.45 4.6 27.3 3 30.5 3C35.7467 3 40 7.25329 40 12.5C40 24.5 21 35.5 21 35.5Z" fill="var(--rose)" stroke="var(--rose)" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="card-title">i didn't know how to tell you<br>so i made this</div>
+    <span class="card-hint">tap to open</span>
+    <div class="card-names">
+      <div class="card-name-row">
+        <span class="card-name-label">to</span>
+        <span class="card-name-value">Sude Varisli</span>
+      </div>
+      <div class="card-name-row">
+        <span class="card-name-label">from</span>
+        <span class="card-name-value">Manuel Raya</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY / LETTER -->
+<div class="overlay" id="overlay">
+  <div class="letter" id="letter">
+    <button class="letter-close" onclick="closeLetter()">✕ close</button>
+
+    <div class="letter-date">may 2026</div>
+
+    <div class="letter-body">
+      <p>i've been sitting with this all day every single day, you already know Sude, it's hard.</p>
+
+      <p>i miss you. and i mean genuinely, deeply miss <em>you</em>. the way you laughed with me on calls. the way you always cared about who i followed and who followed me online. the way everything felt a little more possible and safe when you were around.</p>
+
+      <p>i know things got hard. i know we both said things to eachother, i know we have both hurt eachother. i've thought about what went wrong more times than i can count. and what i keep coming back to isn't the fights or the distance it's <em>our moments</em>, where, even if distanced, they made me feel closer to you than ive ever felt to anyone else before and probably ever will.</p>
+
+      <p>i'm not writing this because i have all the answers. i'm writing it because i think we were worth more than not giving us a second chance. everything i have said these days, even if i looked ridiculous, desperate, embarrassing, i meant every single one of those things.</p>
+
+      <p>it is obvious we won't forget what happened between us, it is obvious we can't be together right now because of your parents. but the things i want the most between us are: <em>relaxation from clarity</em> (like being chill because knowing what we will do), and <em>to forgive</em>, because we still should acknowledge what we did wrong, so we know what to not do anymore with eachother.</p>
+    </div>
+
+    <div class="letter-sign">your little baby</div>
+
+    <div class="btn-area">
+      <span class="btn-question">so, you want to try again, Sude?</span>
+      <div class="btn-row" id="btnRow">
+        <button class="btn-yes" id="btnYes" onclick="sayYes()">yes</button>
+        <button class="btn-no" id="btnNo" onclick="pressNo()">no</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLACKOUT -->
+<div class="blackout" id="blackout">
+  <div class="blackout-text" id="blackoutText">yay!! i love you, text me if you actually want to though. and, if you don't know yet, i hope this makes you think about coming back together a bit more. i love you Sude.</div>
+</div>
+
+<script>
+  let noCount = 0;
+
+  function openLetter() {
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('cardWrap').style.opacity = '0';
+    document.getElementById('cardWrap').style.pointerEvents = 'none';
+  }
+
+  function closeLetter() {
+    document.getElementById('overlay').classList.remove('open');
+    setTimeout(() => {
+      document.getElementById('cardWrap').style.opacity = '1';
+      document.getElementById('cardWrap').style.pointerEvents = 'all';
+    }, 300);
+  }
+
+  function pressNo() {
+    noCount++;
+    const yes = document.getElementById('btnYes');
+    const no  = document.getElementById('btnNo');
+
+    const scale = 1 + noCount * 0.22;
+    const fsPx  = Math.round((1 + noCount * 0.18) * 16);
+    const padV  = 12 + noCount * 4;
+    const padH  = 28 + noCount * 8;
+
+    yes.style.transform = `scale(${scale})`;
+    yes.style.fontSize  = fsPx + 'px';
+    yes.style.padding   = `${padV}px ${padH}px`;
+
+    const noScale = Math.max(0.65, 1 - noCount * 0.08);
+    no.style.transform = `scale(${noScale})`;
+    no.style.opacity   = Math.max(0.35, 1 - noCount * 0.12);
+
+    yes.animate([
+      { transform: `scale(${scale}) rotate(-2deg)` },
+      { transform: `scale(${scale}) rotate(2deg)` },
+      { transform: `scale(${scale}) rotate(0deg)` }
+    ], { duration: 300, easing: 'ease-out' });
+  }
+
+  function sayYes() {
+    document.getElementById('blackout').classList.add('on');
+  }
+</script>
+</body>
+</html>
