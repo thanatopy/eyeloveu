@@ -3,458 +3,376 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>for you</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<title>stay here</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --cream: #f5f0e8;
-    --warm: #e8ddd0;
-    --ink: #2a1f1a;
-    --blush: #c43f3f;
-    --rose: #8b1a1a;
-    --faded: #8a7a72;
+  *, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
   }
 
-  body {
-    min-height: 100vh;
-    background: var(--cream);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Lora', serif;
-    overflow: hidden;
-    position: relative;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 80%, rgba(196,63,63,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(139,26,26,0.06) 0%, transparent 55%);
-    pointer-events: none;
-  }
-
-  .card-wrap {
-    perspective: 1200px;
-    cursor: pointer;
-    position: relative;
-    z-index: 10;
-    transition: opacity 0.6s ease;
-  }
-
-  .card {
-    width: 260px;
-    background: #fff;
-    border-radius: 3px;
-    box-shadow:
-      0 2px 4px rgba(42,31,26,0.06),
-      0 8px 32px rgba(42,31,26,0.10),
-      0 1px 0 rgba(255,255,255,0.8) inset;
-    padding: 44px 36px 36px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    transition: transform 0.4s cubic-bezier(.22,.68,0,1.2), box-shadow 0.4s ease;
-    transform-origin: center bottom;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--blush), var(--rose), var(--blush));
-    opacity: 0.7;
-  }
-
-  .card-wrap:hover .card {
-    transform: translateY(-6px) rotate(-0.5deg);
-    box-shadow:
-      0 4px 8px rgba(42,31,26,0.08),
-      0 20px 52px rgba(42,31,26,0.14);
-  }
-
-  .heart-wrap { position: relative; line-height: 1; }
-
-  .svg-heart {
-    width: 42px;
-    height: 38px;
-    display: block;
-    animation: heartbeat 2.4s ease-in-out infinite;
-    filter: drop-shadow(0 2px 8px rgba(139,26,26,0.3));
-  }
-
-  @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    14%       { transform: scale(1.18); }
-    28%       { transform: scale(1); }
-    42%       { transform: scale(1.10); }
-    56%       { transform: scale(1); }
-  }
-
-  .card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.55rem;
-    color: var(--ink);
-    font-weight: 300;
-    font-style: italic;
-    text-align: center;
-    line-height: 1.35;
-  }
-
-  .card-hint {
-    font-size: 0.7rem;
-    color: var(--faded);
-    letter-spacing: 0.08em;
-    opacity: 0.7;
-    margin-top: 4px;
-  }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(245,240,232,0.0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    pointer-events: none;
-    transition: background 0.5s ease;
-    padding: 20px;
-  }
-
-  .overlay.open {
-    background: rgba(245,240,232,0.96);
-    pointer-events: all;
-    backdrop-filter: blur(6px);
-  }
-
-  .letter {
-    max-width: 540px;
+  html, body {
     width: 100%;
-    background: #fff;
-    border-radius: 3px;
-    box-shadow:
-      0 2px 4px rgba(42,31,26,0.05),
-      0 24px 80px rgba(42,31,26,0.12);
-    padding: 56px 52px 48px;
-    opacity: 0;
-    transform: translateY(28px) scale(0.97);
-    transition: opacity 0.55s cubic-bezier(.22,.68,0,1), transform 0.55s cubic-bezier(.22,.68,0,1);
-    position: relative;
-    overflow: hidden;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  .letter::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--blush), var(--rose), var(--blush));
-    opacity: 0.7;
-  }
-
-  .overlay.open .letter {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-  .letter-close {
-    position: absolute;
-    top: 18px; right: 22px;
-    background: none; border: none;
-    font-size: 1.1rem;
-    color: var(--faded);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 2px;
-    transition: color 0.2s;
-    font-family: 'Cormorant Garamond', serif;
-    letter-spacing: 0.05em;
-  }
-  .letter-close:hover { color: var(--ink); }
-
-  .letter-date {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--faded);
-    margin-bottom: 28px;
-  }
-
-  .letter-body {
-    font-family: 'Lora', serif;
-    font-size: 1rem;
-    line-height: 1.9;
-    color: var(--ink);
-    font-weight: 400;
-  }
-
-  .letter-body p { margin-bottom: 1.4em; }
-  .letter-body p:last-of-type { margin-bottom: 0; }
-  .letter-body em { font-style: italic; color: var(--rose); }
-
-  .letter-sign {
-    margin-top: 32px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
-    font-style: italic;
-    color: var(--faded);
-    text-align: right;
-  }
-
-  .btn-area {
-    margin-top: 40px;
-    padding-top: 32px;
-    border-top: 1px solid rgba(42,31,26,0.07);
-    text-align: center;
-  }
-
-  .btn-question {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-style: italic;
-    color: var(--faded);
-    margin-bottom: 22px;
-    display: block;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .btn-yes, .btn-no {
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    white-space: nowrap;
-  }
-
-  .btn-yes {
-    background: var(--rose);
+    min-height: 100vh;
+    background: #000;
     color: #fff;
-    padding: 12px 28px;
-    font-size: 1rem;
-    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), background 0.25s, padding 0.35s cubic-bezier(.34,1.56,.64,1), font-size 0.35s cubic-bezier(.34,1.56,.64,1);
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 300;
+    overflow-x: hidden;
   }
 
-  .btn-yes:hover { background: #a52020; }
-
-  .btn-no {
-    background: transparent;
-    color: var(--faded);
-    padding: 12px 22px;
-    font-size: 0.9rem;
-    border: 1px solid rgba(138,122,114,0.3);
-    transition: border-color 0.2s, color 0.2s, transform 0.3s, opacity 0.3s;
+  #intro {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 100;
+    background: #000;
+    cursor: pointer;
+    transition: opacity 1.8s ease;
   }
 
-  .btn-no:hover {
-    border-color: rgba(138,122,114,0.6);
-    color: var(--ink);
+  #intro.fade-out {
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .blackout {
+  .eye-svg {
+    overflow: visible;
+    filter: drop-shadow(0 0 16px rgba(255,255,255,0.18));
+  }
+
+  .stay-text {
+    margin-top: 40px;
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    color: #fff;
+    opacity: 0;
+    text-shadow: 0 0 28px rgba(255,255,255,0.7), 0 0 60px rgba(255,255,255,0.25);
+    transition: opacity 1.4s ease 0.2s;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .stay-text.visible { opacity: 1; }
+
+  #main {
+    min-height: 100vh;
+    padding: 0 clamp(28px, 9vw, 180px);
+    padding-top: 28vh;
+    padding-bottom: 22vh;
+    opacity: 0;
+    transition: opacity 2s ease;
+    pointer-events: none;
+  }
+
+  #main.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .paragraph {
+    max-width: 600px;
+    font-size: clamp(0.76rem, 1.4vw, 0.9rem);
+    line-height: 2.3;
+    letter-spacing: 0.025em;
+    color: rgba(255,255,255,0.78);
+    text-shadow: 0 0 40px rgba(255,255,255,0.1);
+    white-space: pre-wrap;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 2.4s ease, transform 2.4s ease;
+  }
+
+  .paragraph.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .conclude-wrap {
+    margin-top: 14vh;
+    opacity: 0;
+    transition: opacity 1.8s ease;
+    pointer-events: none;
+  }
+
+  .conclude-wrap.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #conclude-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Source Code Pro', monospace;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.38em;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.6s ease, text-shadow 0.6s ease;
+  }
+
+  #conclude-btn:hover {
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 0 18px rgba(255,255,255,0.35);
+  }
+
+  #final {
     position: fixed;
     inset: 0;
     background: #000;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.6s ease;
+    z-index: 200;
   }
 
-  .blackout.on {
+  #final.visible {
     opacity: 1;
     pointer-events: all;
   }
 
-  .blackout-text {
-    font-family: 'Lora', serif;
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0);
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    font-style: italic;
-    transition: color 1.2s ease 0.9s;
-    text-align: center;
-    max-width: 380px;
-    padding: 0 28px;
-    line-height: 1.8;
+  .final-eye-svg {
+    overflow: visible;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.18));
   }
-
-  .blackout.on .blackout-text {
-    color: rgba(255,255,255,0.88);
-  }
-
-  .card-names {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    border-top: 1px solid rgba(42,31,26,0.08);
-    padding-top: 14px;
-    margin-top: 2px;
-  }
-
-  .card-name-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 8px;
-  }
-
-  .card-name-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--faded);
-    font-weight: 300;
-    opacity: 0.7;
-    flex-shrink: 0;
-  }
-
-  .card-name-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.82rem;
-    color: var(--ink);
-    font-style: italic;
-    font-weight: 300;
-    text-align: right;
-  }
-
-  .letter::-webkit-scrollbar { width: 4px; }
-  .letter::-webkit-scrollbar-track { background: transparent; }
-  .letter::-webkit-scrollbar-thumb { background: rgba(138,122,114,0.3); border-radius: 2px; }
 </style>
 </head>
 <body>
 
-<!-- CARD -->
-<div class="card-wrap" id="cardWrap" onclick="openLetter()">
-  <div class="card">
-    <div class="heart-wrap">
-      <svg class="svg-heart" viewBox="0 0 42 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 35.5C21 35.5 2 24.5 2 12.5C2 7.25329 6.25329 3 11.5 3C14.7 3 17.55 4.6 19.35 7.05L21 9.25L22.65 7.05C24.45 4.6 27.3 3 30.5 3C35.7467 3 40 7.25329 40 12.5C40 24.5 21 35.5 21 35.5Z" fill="var(--rose)" stroke="var(--rose)" stroke-width="1.5" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="card-title">i didn't know how to tell you<br>so i made this</div>
-    <span class="card-hint">tap to open</span>
-    <div class="card-names">
-      <div class="card-name-row">
-        <span class="card-name-label">to</span>
-        <span class="card-name-value">Sude Varisli</span>
-      </div>
-      <div class="card-name-row">
-        <span class="card-name-label">from</span>
-        <span class="card-name-value">Manuel Raya</span>
-      </div>
-    </div>
+<!-- INTRO -->
+<div id="intro">
+  <svg class="eye-svg" width="150" height="75" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="eye-clip">
+        <path d="M10,30 Q60,-12 110,30 Q60,72 10,30 Z"/>
+      </clipPath>
+    </defs>
+    <path d="M10,30 Q60,-12 110,30 Q60,72 10,30 Z" fill="rgba(255,255,255,0.04)"/>
+    <circle cx="60" cy="30" r="12" fill="#fff" opacity="0.88" clip-path="url(#eye-clip)"/>
+    <circle cx="60" cy="30" r="6.5" fill="#000" clip-path="url(#eye-clip)"/>
+    <circle cx="65" cy="25" r="2.2" fill="#fff" opacity="0.65" clip-path="url(#eye-clip)"/>
+    <path d="M10,30 Q60,-12 110,30 Q60,72 10,30 Z"
+          fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
+    <path id="upper-lid"
+          d="M10,30 Q60,-12 110,30 Q60,-12 10,30 Z"
+          fill="#000"/>
+  </svg>
+  <div class="stay-text" id="stay-text">stay here</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+  <p class="paragraph" id="letter">hello sude, you're probably tired of me already, but everything stings, i just want to talk with you without you being so dry, without you being so distant.
+i finally realized what i want from you.
+i want you to choose me again, one day, sooner or later.
+i want to show you who i really am,
+and work on things together in the future.
+personally, i think we are cute together, beautiful even. i can't see myself with anyone else.
+now i know that, if you reply, you will say we are broken up so nothing really matters anymore. you're right, but i just want you to give this a chance. not to try again yet, but to be there for each other even if we don't text. to still respect each other.
+you might hate me now well i am not sure if you do, i'm not sure if the playlist we made actually means something, or if there's actually some hope in you that you choose to hide because you fear having to hide me again.
+but if it meant fixing things i would change my whole identity just to be together again.
+i want to forget the past sude, and build something new together that is so much better, exactly like how we wanted things to be.
+i miss when you chose me, when you felt something more than the leftovers of the love you used to feel for me that is only still inside you because not much time has passed.
+i don't want you to reply to this
+just do something
+if you think there's a possibility, and still feel something inside you even if you don't want to say what it is, keep our playlist.
+if you don't leave it, leave the playlist.
+keep me in a heart-shaped locket inside of your soul, i love you.
+your sweet boy</p>
+
+  <div class="conclude-wrap" id="conclude-wrap">
+    <button id="conclude-btn">conclude?</button>
   </div>
 </div>
 
-<!-- OVERLAY / LETTER -->
-<div class="overlay" id="overlay">
-  <div class="letter" id="letter">
-    <button class="letter-close" onclick="closeLetter()">✕ close</button>
-
-    <div class="letter-date">May 2026</div>
-
-    <div class="letter-body">
-      <p>i've been sitting with this all day every single day, you already know Sude, it's hard. i made this website thing to finally make one for you, and make it be a "last push" as i have been trying for some time now to talk or anything, just to stabilize.</p>
-
-      <p>i miss you. and i mean genuinely, deeply miss <em>you</em>. the way you laughed with me on calls. the way you always cared about who i followed and who followed me online. the way everything felt a little more possible and safe when we were together.</p>
-
-      <p>i know things got hard. i know we both said things to eachother, i know we have both hurt eachother, but it is always fixable. and what i keep coming back to is <em>our moments</em>, where, even if distanced, they made me feel closer to you than ive ever felt to anyone else before and probably ever will.</p>
-
-      <p>i'm writing this because i think we were worth more than not giving us a second chance, it might be ridiculous and stupid to make a website and code this for a night just for a relationship. everything i have said these days, even if i looked ridiculous, desperate, embarrassing, i meant every single one of those things.</p>
-
-      <p>it is obvious we won't forget what happened between us, it is obvious we can't be together right now because of your parents. but the things i want the most between us are: <em>relaxation from clarity</em> (like being chill because knowing what we will do), and <em>to forgive</em>, because we still should acknowledge what we did wrong, so we know what to not do anymore with eachother. i hope this thing changes your mind. and i hope you text me if you read this, because i want to talk.</p>
-    </div>
-
-    <div class="letter-sign">- your birthday boy</div>
-
-    <div class="btn-area">
-      <span class="btn-question">so do you want us to try again in the future?</span>
-      <div class="btn-row" id="btnRow">
-        <button class="btn-yes" id="btnYes" onclick="sayYes()">yes</button>
-        <button class="btn-no" id="btnNo" onclick="pressNo()">no</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- BLACKOUT -->
-<div class="blackout" id="blackout">
-  <div class="blackout-text" id="blackoutText">yay!! i love you, text me if you actually want to though (there was like no other choice in this website). and, if you don't know yet, i hope this makes you think about coming back together a bit more. also if you don't want to, it's fine, just tell me. i love you Sude.</div>
+<!-- FINAL SCREEN -->
+<div id="final">
+  <svg class="final-eye-svg" width="170" height="85" viewBox="0 0 140 70" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="final-clip">
+        <path d="M12,35 Q70,-14 128,35 Q70,84 12,35 Z"/>
+      </clipPath>
+    </defs>
+    <path d="M12,35 Q70,-14 128,35 Q70,84 12,35 Z" fill="rgba(255,255,255,0.04)"/>
+    <g clip-path="url(#final-clip)">
+      <path d="M70,52 C70,52 46,38 46,23 C46,15 52,9 60,12 C63,13 67,17 70,21 C73,17 77,13 80,12 C88,9 94,15 94,23 C94,38 70,52 70,52 Z"
+            fill="#fff" opacity="0.88"/>
+    </g>
+    <circle cx="80" cy="20" r="2.8" fill="#fff" opacity="0.55" clip-path="url(#final-clip)"/>
+    <path d="M12,35 Q70,-14 128,35 Q70,84 12,35 Z"
+          fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
+    <path id="final-upper-lid"
+          d="M12,35 Q70,-14 128,35 Q70,-14 12,35 Z"
+          fill="#000"/>
+  </svg>
 </div>
 
 <script>
-  let noCount = 0;
-
-  function openLetter() {
-    document.getElementById('overlay').classList.add('open');
-    document.getElementById('cardWrap').style.opacity = '0';
-    document.getElementById('cardWrap').style.pointerEvents = 'none';
+// ── EYE CONFIGS ──────────────────────────────────────────────────────────
+const EYES = {
+  main: {
+    lid: 'upper-lid',
+    x0: 10, x1: 110, cx: 60, midY: 30,
+    openY: -12,
+    closedY: 72,
+  },
+  final: {
+    lid: 'final-upper-lid',
+    x0: 12, x1: 128, cx: 70, midY: 35,
+    openY: -14,
+    closedY: 84,
   }
+};
 
-  function closeLetter() {
-    document.getElementById('overlay').classList.remove('open');
-    setTimeout(() => {
-      document.getElementById('cardWrap').style.opacity = '1';
-      document.getElementById('cardWrap').style.pointerEvents = 'all';
-    }, 300);
-  }
+function lidPath(cfg, cy) {
+  const { x0, x1, cx, midY } = cfg;
+  return `M${x0},${midY} Q${cx},${cy} ${x1},${midY} Q${cx},${cy} ${x0},${midY} Z`;
+}
 
-  function pressNo() {
-    noCount++;
-    const yes = document.getElementById('btnYes');
-    const no  = document.getElementById('btnNo');
+function easeInOut(t) {
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+}
 
-    const scale = 1 + noCount * 0.22;
-    const fsPx  = Math.round((1 + noCount * 0.18) * 16);
-    const padV  = 12 + noCount * 4;
-    const padH  = 28 + noCount * 8;
+function animateLid(cfg, fromY, toY, duration) {
+  return new Promise(resolve => {
+    const lid = document.getElementById(cfg.lid);
+    if (!lid) { resolve(); return; }
+    const start = performance.now();
+    function frame(now) {
+      const raw = Math.min((now - start) / duration, 1);
+      const cy  = fromY + (toY - fromY) * easeInOut(raw);
+      lid.setAttribute('d', lidPath(cfg, cy));
+      if (raw < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
 
-    yes.style.transform = `scale(${scale})`;
-    yes.style.fontSize  = fsPx + 'px';
-    yes.style.padding   = `${padV}px ${padH}px`;
+async function blink(cfg) {
+  await animateLid(cfg, cfg.openY, cfg.closedY, 85);
+  await new Promise(r => setTimeout(r, 55));
+  await animateLid(cfg, cfg.closedY, cfg.openY, 105);
+}
 
-    const noScale = Math.max(0.65, 1 - noCount * 0.08);
-    no.style.transform = `scale(${noScale})`;
-    no.style.opacity   = Math.max(0.35, 1 - noCount * 0.12);
+// ── SCHEDULED BLINKING ───────────────────────────────────────────────────
+let mainTimer = null;
+let finalTimer = null;
+let mainBlinkActive = false;
 
-    yes.animate([
-      { transform: `scale(${scale}) rotate(-2deg)` },
-      { transform: `scale(${scale}) rotate(2deg)` },
-      { transform: `scale(${scale}) rotate(0deg)` }
-    ], { duration: 300, easing: 'ease-out' });
-  }
+function randomInterval() { return 2600 + Math.random() * 2600; }
 
-  function sayYes() {
-    document.getElementById('blackout').classList.add('on');
-  }
+function scheduleMainBlink() {
+  if (!mainBlinkActive) return;
+  mainTimer = setTimeout(async () => {
+    if (!mainBlinkActive) return;
+    await blink(EYES.main);
+    if (mainBlinkActive && Math.random() < 0.22) {
+      await new Promise(r => setTimeout(r, 280));
+      await blink(EYES.main);
+    }
+    scheduleMainBlink();
+  }, randomInterval());
+}
+
+function stopMainBlink() {
+  mainBlinkActive = false;
+  clearTimeout(mainTimer);
+}
+
+function startMainBlink() {
+  mainBlinkActive = true;
+  scheduleMainBlink();
+}
+
+function scheduleFinalBlink() {
+  finalTimer = setTimeout(async () => {
+    await blink(EYES.final);
+    if (Math.random() < 0.2) {
+      await new Promise(r => setTimeout(r, 300));
+      await blink(EYES.final);
+    }
+    scheduleFinalBlink();
+  }, randomInterval());
+}
+
+// ── BOOT ─────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  // set lid to open position
+  const lid = document.getElementById(EYES.main.lid);
+  lid.setAttribute('d', lidPath(EYES.main, EYES.main.openY));
+  startMainBlink();
+});
+
+// ── CLICK INTRO ──────────────────────────────────────────────────────────
+const intro        = document.getElementById('intro');
+const stayText     = document.getElementById('stay-text');
+const mainEl       = document.getElementById('main');
+const letter       = document.getElementById('letter');
+const concludeWrap = document.getElementById('conclude-wrap');
+let clicked = false;
+
+intro.addEventListener('click', async () => {
+  if (clicked) return;
+  clicked = true;
+
+  stopMainBlink();
+
+  // eye closes and stays shut
+  await animateLid(EYES.main, EYES.main.openY, EYES.main.closedY, 100);
+
+  // "stay here" drifts in
+  stayText.classList.add('visible');
+
+  // intro fades away
+  setTimeout(() => intro.classList.add('fade-out'), 1600);
+
+  // main content appears
+  setTimeout(() => {
+    intro.style.display = 'none';
+    mainEl.classList.add('visible');
+    setTimeout(() => letter.classList.add('visible'), 500);
+  }, 3400);
+});
+
+// ── SCROLL → SHOW CONCLUDE ───────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) concludeWrap.classList.add('visible');
+  });
+}, { threshold: 0.6 });
+observer.observe(concludeWrap);
+
+// ── CONCLUDE ─────────────────────────────────────────────────────────────
+const concludeBtn = document.getElementById('conclude-btn');
+const finalScreen = document.getElementById('final');
+let concluded = false;
+
+concludeBtn.addEventListener('click', () => {
+  if (concluded) return;
+  concluded = true;
+
+  mainEl.style.transition = 'opacity 1.5s ease';
+  mainEl.style.opacity = '0';
+
+  setTimeout(() => {
+    mainEl.style.display = 'none';
+    finalScreen.classList.add('visible');
+
+    // init final lid open
+    const fl = document.getElementById(EYES.final.lid);
+    fl.setAttribute('d', lidPath(EYES.final, EYES.final.openY));
+
+    setTimeout(scheduleFinalBlink, 900);
+  }, 1600);
+});
 </script>
 </body>
 </html>
