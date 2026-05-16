@@ -192,6 +192,11 @@ your sweet boy</p>
   </div>
 </div>
 
+<!-- AUDIO — put your song file (song.mp3) in the same folder as index.html -->
+<audio id="bg-music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
 <!-- FINAL SCREEN -->
 <div id="final">
   <svg class="final-eye-svg" width="170" height="85" viewBox="0 0 140 70" xmlns="http://www.w3.org/2000/svg">
@@ -322,6 +327,10 @@ let clicked = false;
 intro.addEventListener('click', async () => {
   if (clicked) return;
   clicked = true;
+
+  const music = document.getElementById('bg-music');
+  music.volume = 0.5;
+  music.play().catch(() => {}); // silently ignore if file not found
 
   stopMainBlink();
 
